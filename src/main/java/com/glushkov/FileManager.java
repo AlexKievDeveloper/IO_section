@@ -7,7 +7,7 @@ import java.io.*;
 public class FileManager {
 
     public int countFiles(String path) {
-        validationPath(path);
+        validationPathToDirectory(path);
         File file = new File(path);
         File[] files = file.listFiles();
 
@@ -71,7 +71,7 @@ public class FileManager {
         delete(from);
     }
 
-    protected void delete(String file) {
+    void delete(String file) {
         File fileForDeleting = new File(file);
         if (fileForDeleting.isFile() || fileForDeleting.isDirectory() && ((fileForDeleting.listFiles().length) == 0)) {
             fileForDeleting.delete();
@@ -83,7 +83,7 @@ public class FileManager {
         }
     }
 
-    private void copyService(File fromFile, File toFile) {
+    void copyService(File fromFile, File toFile) {
         try (InputStream inputStream = new FileInputStream(fromFile);
              OutputStream outputStream = new FileOutputStream(toFile)) {
 
@@ -97,15 +97,18 @@ public class FileManager {
         }
     }
 
-    private static void validationPath(String path) {
-        if (!new File(path).exists()) {
-            throw new IllegalArgumentException("Incorrect path " + path + ". Please choose the correct path to the directory and try again");
+    void validationPath(String path) {
+        if (!new File(new File(path).getAbsolutePath()).exists()) {
+            throw new IllegalArgumentException("Incorrect path " + path + ". Specified Path to File/Directory doesn`t exist . Please choose the correct path to the File/Directory and try again");
         }
     }
 
-    private static void validationPathToDirectory(String path) {
-        if (!new File(path).exists() || (!new File(path).isDirectory())) {
-            throw new IllegalArgumentException("Incorrect path " + path + ". Please choose the correct path to the directory and try again");
+    void validationPathToDirectory(String path) {
+        if (!new File(new File(path).getAbsolutePath()).exists()) {
+            throw new IllegalArgumentException("Incorrect path " + path + ". Specified Path to Directory doesn`t exist. Please choose the correct path to the Directory and try again");
+        }
+        if (!new File(new File(path).getAbsolutePath()).isDirectory()) {
+            throw new IllegalArgumentException("Incorrect path " + path + ". Specified Path isn`t a Directory. Please choose the correct path to the Directory and try again");
         }
     }
 }
